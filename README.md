@@ -22,11 +22,43 @@ Leaving out the port entirely assumes you are using port 8777.
 
 ### Querying
 
-Not done yet...
+To get all of the nodes in the database:
+
+    $nodes = $sigil->nodes();
+
+To get all of the connections in the database:
+
+    $connections = $sigil->connections();
+
+To get a specific node, where the only parameter is the unique ID of the node you want:
+
+    $node = $sigil->node(4);
+
+To get a specific connection, where the only parameter is the unique ID of the connection you want:
+
+    $connection = $sigil->connection(6);
+
+To get all of the connections attached to a specific node, where the only parameter is the unique ID of the node you want connections for:
+
+    $connections = $sigil->nodeConnections(4);
+
+To get all of the nodes connected (adjacent) to a specific node, where the only parameter is the unique ID of the node you want adjacent nodes for:
+
+    $nodes = $sigil->adjacentNodes(4);
+
+To get the shortest path between two nodes, where the first parameter is the source node ID and the second parameter is the target node ID:
+
+    $connections = $sigil->shortestPath(4, 12);
+
+To get the Euclidean distance between two nodes:
+
+    $distance_float = $sigil->distance(4, 12);
+
+What they return is dependent on what you asked for. I tried to name the above result-holding variables in a way that would hint at what you'll get back. If you get `false` as a result, that means there was an error. See the **Errors** section below.
 
 ### Creating Nodes and Connections
 
-To create a new Node, do this:
+To create a new node, do this:
 
     $result = $sigil->newNode('A new node!', 1, 4, 0, array('something' => 'whatever'));
 
@@ -36,7 +68,7 @@ Technically you can send the `newNode()` method no arguments at all, but here th
 
 The result will be `true` on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
 
-To create a new Connection, do this:
+To create a new connection, do this:
 
     $result = $sigil->newConnection('A new connection!', 2, 4, array('bonus' => 'lol'));
 
@@ -47,6 +79,34 @@ You must at least send the `newConnection()` method source and target nodes. The
 That will create a new connection between nodes 2 and 4.
 
 The result will be `true` on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
+
+### Updating Nodes and Connections
+
+To update an existing node, do this:
+
+    $result = $sigil->updateNode( array('Id' => 1, 'Name' => 'Updated name!') );
+
+That will update the node with the unique ID 1 to an updated name. Set whatever attributes in an associative array and send it along to update a node.
+
+The same is true for connections:
+
+    $result = $sigil->updateConnection( array('Id' => 1, 'Name' => 'Updated name!', 'Source' => 1, 'Target' => 10) );
+
+Note that when updating a connection you **must** supply the `Source` and `Target` attributes even if you are not modifying them.
+
+## Deleting Nodes and Connections
+
+To delete a specific node:
+
+    $result = $sigil->deleteNode(11);
+
+That will delete the node with the unique ID 11, and all of the connections attached to that node.
+
+To delete a specific connection:
+
+    $result = $sigil->deleteConnection(5);
+
+That will delete the connection with the unique ID 5.
 
 ### Errors
 

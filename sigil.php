@@ -18,16 +18,19 @@ class SIGIL {
 		}
 	}
 	
+	// perform a raw REST call on the server
 	public function rawCall($path, $type = 'GET', $data = null) {
-		// do a raw call to the database
+		// if the path isn't set, freak out
 		if (!isset($path) || trim($path) == '' || substr($path, 0, 1) != '/') {
 			throw new Exception('You must provide a path for your raw database call.');
 		}
+		// if the type isn't an acceptable method, freak out
 		$acceptable_methods = array('GET', 'POST', 'DELETE');
 		if (!in_array(strtoupper($type), $acceptable_methods)) {
 			throw new Exception('The method type you provided is invalid.');
 		}
 		$type = strtoupper($type);
+		// determine what to do/encode the data provided by the user
 		if (is_array($data)) {
 			$body = json_encode($data);
 		} else if ($data != null) {
@@ -35,6 +38,7 @@ class SIGIL {
 		} else if ($type == 'POST' && ($data == null || trim($data) == '')) {
 			throw new Exception('You cannot make a POST request with no data.');
 		}
+		// start a new cURL session
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'http://'. ($this->sigil_host) . $path);
 		curl_setopt($ch, CURLOPT_HEADER, true);
@@ -50,6 +54,7 @@ class SIGIL {
 		}
 		$raw_result = curl_exec($ch);
 		
+		// if there was no result at all, freak out
 		if ($raw_result == '') {
 			$this->last_error = 'No result was given from the request, oh dear.';
 			curl_close($ch);
@@ -69,15 +74,127 @@ class SIGIL {
 			return false;
 		}
 		curl_close($ch);
+		
 		// parse body of the response
 		$json_result = json_decode($response_body, true);
+		
+		// if that worked, return it as an array
 		if (is_array($json_result)) {
 			return $json_result;
 		} else {
-			return $response_body;
+			return $response_body; // otherwise send the text along
 		}
 	}
 	
+	// get all the nodes
+	public function nodes() {
+		$result = $this->rawCall('/nodes');
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get all the connections
+	public function connections() {
+		$result = $this->rawCall('/connections');
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get a specific node
+	public function node($node_id) {
+		if (!is_numeric($node_id) || int($node_id) < 1) {
+			throw new Exception('You must supply a unique node ID to retrieve.');
+		}
+		$node_id = (int) $node_id * 1;
+		$result = $this->rawCall('/node/'.$node_id);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get a specific connection
+	public function connection($conn_id) {
+		if (!is_numeric($conn_id) || int($conn_id) < 1) {
+			throw new Exception('You must supply a unique connection ID to retrieve.');
+		}
+		$conn_id = (int) $conn_id * 1;
+		$result = $this->rawCall('/connection/'.$conn_id);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get connections attached to a node
+	public function nodeConnections($node_id) {
+		if (!is_numeric($node_id) || int($node_id) < 1) {
+			throw new Exception('You must supply a unique node ID to retrieve connections for.');
+		}
+		$node_id = (int) $node_id * 1;
+		$result = $this->rawCall('/node/'.$node_id.'/connections');
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get nodes adjacent to a node
+	public function adjacentNodes($node_id) {
+		if (!is_numeric($node_id) || int($node_id) < 1) {
+			throw new Exception('You must supply a unique node ID to retrieve adjacent nodes.');
+		}
+		$node_id = (int) $node_id * 1;
+		$result = $this->rawCall('/node/'.$node_id.'/adjacent');
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get shortest path from source node to target node
+	public function shortestPath($source_id, $target_id) {
+		if (!is_numeric($source_id) || int($source_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the source.');
+		}
+		if (!is_numeric($target_id) || int($target_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the target.');
+		}
+		$result = $this->rawCall('/shortest/from/'.$source_id.'/to/'.$target_id);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get Euclidean distance from source node to target node
+	public function distance($source_id, $target_id) {
+		if (!is_numeric($source_id) || int($source_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the source.');
+		}
+		if (!is_numeric($target_id) || int($target_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the target.');
+		}
+		$result = $this->rawCall('/distance/from/'.$source_id.'/to/'.$target_id);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// make a new node
 	public function newNode($name = '', $x = 0, $y = 0, $z = 0, $extra = null) {
 		$new_node = array();
 		$new_node['Name'] = $name;
@@ -93,6 +210,7 @@ class SIGIL {
 		}
 	}
 	
+	// make a new connection between two nodes
 	public function newConnection($name = '', $source = null, $target = null, $extra = null) {
 		$new_conn = array();
 		$new_conn['Name'] = $name;
@@ -100,6 +218,60 @@ class SIGIL {
 		$new_conn['Target'] = $target;
 		$new_conn['ExtraJSON'] = $extra;
 		$result = $this->rawCall('/connection', 'POST', $new_conn);
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// update a node
+	public function updateNode($node) {
+		if (!is_array($node)) {
+			throw new Exception('You must supply an associative array of the updated attributes.');
+		}
+		$result = $this->rawCall('/node', 'POST', $node);
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// update a connection
+	public function updateConnection($conn) {
+		if (!is_array($conn)) {
+			throw new Exception('You must supply an associative array of the updated attributes.');
+		}
+		$result = $this->rawCall('/connection', 'POST', $conn);
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// delete a node
+	public function deleteNode($node_id) {
+		if (!is_numeric($node_id) || int($node_id) < 1) {
+			throw new Exception('You must supply a unique node ID to delete.');
+		}
+		$node_id = (int) $node_id * 1;
+		$result = $this->rawCall('/node/'.$node_id, 'DELETE');
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// delete a connection
+	public function deleteConnection($conn_id) {
+		if (!is_numeric($conn_id) || int($conn_id) < 1) {
+			throw new Exception('You must supply a unique connection ID to delete.');
+		}
+		$conn_id = (int) $conn_id * 1;
+		$result = $this->rawCall('/connection/'.$conn_id, 'DELETE');
 		if ($result == false) {
 			return false;
 		} else {
