@@ -110,13 +110,13 @@ That will delete the connection with the unique ID 5.
 
 ### Errors
 
-If you call a method and provide incorrect or erroneous parameters, the call with throw an Exception with the relevant error message.
+If you call a method and provide incorrect or erroneous parameters, the call with throw an Exception with the relevant error message. Exceptions are thrown when the data you provide the sigil client is wrong in some way. If the data is alright and something is wrong on the database end, you will get `false` as a result.
 
-If a call results in `false`, that means there was an error of some kind. You can access the error by calling:
+If a call results in `false`, you can access the error message from the database server by calling:
 
     $error_message = $sigil->last_error
 
-Which will give you a string of the last error that happened. This could be a `404 not found`, or something else.
+Which will give you a string of the last error that happened. This could be a `404 not found` (if you were looking for a node that doesn't exist, for example), or something else.
 
 Better error reporting is a planned feature.
 
