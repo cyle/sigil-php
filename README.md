@@ -1,6 +1,6 @@
-# SIGIL-PHP
+# sigil-php
 
-`sigil.php` provides a class, SIGIL, to use an instance of the SIGIL database.
+`sigil.php` provides a class, SIGIL, to act as a client of the SIGIL database.
 
 ## Usage
 
@@ -18,7 +18,11 @@ By default, this assumes you are connecting to http://localhost:8777/ (which is 
 
     $sigil = new SIGIL('somewhere-else.com:1337');
 
-Leaving out the port entirely assumes you are using port 8777.
+Leaving out the port entirely assumes you are using port 8777:
+
+    $sigil = new SIGIL('somewhere-else.com');
+
+That's it.
 
 ### Querying
 
@@ -94,7 +98,7 @@ The same is true for connections:
 
 Note that when updating a connection you **must** supply the `Source` and `Target` attributes even if you are not modifying them.
 
-## Deleting Nodes and Connections
+### Deleting Nodes and Connections
 
 To delete a specific node:
 
