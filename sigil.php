@@ -279,6 +279,16 @@ class SIGIL {
 		}
 	}
 	
+	// save the database
+	public function save() {
+		$result = $this->rawCall('/save');
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 }
 
 

@@ -112,6 +112,16 @@ To delete a specific connection:
 
 That will delete the connection with the unique ID 5.
 
+### Saving the Database to Disk
+
+By default, anything done in a SIGIL database is not persistent unless you tell the database to save itself to disk. You can do this with this client:
+
+    $result = $sigil->save();
+
+That'll make sure the database is saved to disk. Next time the database restarts, it'll have your data loaded automatically.
+
+At the time of this writing, the SIGIL database does not save by itself in any fashion. You have to explicitly tell it to save the current graph.
+
 ### Errors
 
 If you call a method and provide incorrect or erroneous parameters, the call with throw an Exception with the relevant error message. Exceptions are thrown when the data you provide the sigil client is wrong in some way. If the data is alright and something is wrong on the database end, you will get `false` as a result.
