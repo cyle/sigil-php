@@ -8,6 +8,9 @@ class SIGIL {
 	function __construct($sigil_host = null) {
 		if (isset($sigil_host) && trim($sigil_host) != '') {
 			if (filter_var('http://'.$sigil_host, FILTER_VALIDATE_URL) && strpos($sigil_host, -1) != '/') {
+				if (strpos($sigil_host, ':') === false) {
+					$sigil_host .= ':8777';
+				}
 				$this->sigil_host = $sigil_host;
 			} else {
 				throw new Exception('Invalid API URL given; please make sure does NOT include a trailing slash.');
