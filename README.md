@@ -1,6 +1,6 @@
 # sigil-php
 
-`sigil.php` provides a class, SIGIL, to act as a client of the SIGIL database.
+`sigil.php` provides a class, SIGIL, to act as a client of [a SIGIL database](https://github.com/cyle/sigil/).
 
 ## Usage
 
