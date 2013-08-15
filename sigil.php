@@ -2,13 +2,13 @@
 
 class SIGIL {
 	
-	protected $api_url = 'http://localhost:8777';
+	protected $sigil_host = 'localhost:8777';
 	public $last_error;
 	
-	function __construct($api_url = null) {
-		if (isset($api_url) && trim($api_url) != '') {
-			if (filter_var($api_url, FILTER_VALIDATE_URL) && strpos($api_url, -1) != '/') {
-				$this->api_url = $api_url;
+	function __construct($sigil_host = null) {
+		if (isset($sigil_host) && trim($sigil_host) != '') {
+			if (filter_var('http://'.$sigil_host, FILTER_VALIDATE_URL) && strpos($sigil_host, -1) != '/') {
+				$this->sigil_host = $sigil_host;
 			} else {
 				throw new Exception('Invalid API URL given; please make sure does NOT include a trailing slash.');
 			}
@@ -33,7 +33,7 @@ class SIGIL {
 			throw new Exception('You cannot make a POST request with no data.');
 		}
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, ($this->api_url) . $path);
+		curl_setopt($ch, CURLOPT_URL, 'http://'. ($this->sigil_host) . $path);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 1);
