@@ -108,7 +108,7 @@ class SIGIL {
 	
 	// get a specific node
 	public function node($node_id) {
-		if (!is_numeric($node_id) || int($node_id) < 1) {
+		if (!is_numeric($node_id) || intval($node_id) < 1) {
 			throw new Exception('You must supply a unique node ID to retrieve.');
 		}
 		$node_id = (int) $node_id * 1;
@@ -122,7 +122,7 @@ class SIGIL {
 	
 	// get a specific connection
 	public function connection($conn_id) {
-		if (!is_numeric($conn_id) || int($conn_id) < 1) {
+		if (!is_numeric($conn_id) || intval($conn_id) < 1) {
 			throw new Exception('You must supply a unique connection ID to retrieve.');
 		}
 		$conn_id = (int) $conn_id * 1;
@@ -136,7 +136,7 @@ class SIGIL {
 	
 	// get connections attached to a node
 	public function nodeConnections($node_id) {
-		if (!is_numeric($node_id) || int($node_id) < 1) {
+		if (!is_numeric($node_id) || intval($node_id) < 1) {
 			throw new Exception('You must supply a unique node ID to retrieve connections for.');
 		}
 		$node_id = (int) $node_id * 1;
@@ -150,7 +150,7 @@ class SIGIL {
 	
 	// get nodes adjacent to a node
 	public function adjacentNodes($node_id) {
-		if (!is_numeric($node_id) || int($node_id) < 1) {
+		if (!is_numeric($node_id) || intval($node_id) < 1) {
 			throw new Exception('You must supply a unique node ID to retrieve adjacent nodes.');
 		}
 		$node_id = (int) $node_id * 1;
@@ -164,10 +164,10 @@ class SIGIL {
 	
 	// get shortest path from source node to target node
 	public function shortestPath($source_id, $target_id) {
-		if (!is_numeric($source_id) || int($source_id) < 1) {
+		if (!is_numeric($source_id) || intval($source_id) < 1) {
 			throw new Exception('You must supply a unique node ID as the source.');
 		}
-		if (!is_numeric($target_id) || int($target_id) < 1) {
+		if (!is_numeric($target_id) || intval($target_id) < 1) {
 			throw new Exception('You must supply a unique node ID as the target.');
 		}
 		$result = $this->rawCall('/shortest/from/'.$source_id.'/to/'.$target_id);
@@ -180,10 +180,10 @@ class SIGIL {
 	
 	// get Euclidean distance from source node to target node
 	public function distance($source_id, $target_id) {
-		if (!is_numeric($source_id) || int($source_id) < 1) {
+		if (!is_numeric($source_id) || intval($source_id) < 1) {
 			throw new Exception('You must supply a unique node ID as the source.');
 		}
-		if (!is_numeric($target_id) || int($target_id) < 1) {
+		if (!is_numeric($target_id) || intval($target_id) < 1) {
 			throw new Exception('You must supply a unique node ID as the target.');
 		}
 		$result = $this->rawCall('/distance/from/'.$source_id.'/to/'.$target_id);
@@ -253,7 +253,7 @@ class SIGIL {
 	
 	// delete a node
 	public function deleteNode($node_id) {
-		if (!is_numeric($node_id) || int($node_id) < 1) {
+		if (!is_numeric($node_id) || intval($node_id) < 1) {
 			throw new Exception('You must supply a unique node ID to delete.');
 		}
 		$node_id = (int) $node_id * 1;
@@ -267,7 +267,7 @@ class SIGIL {
 	
 	// delete a connection
 	public function deleteConnection($conn_id) {
-		if (!is_numeric($conn_id) || int($conn_id) < 1) {
+		if (!is_numeric($conn_id) || intval($conn_id) < 1) {
 			throw new Exception('You must supply a unique connection ID to delete.');
 		}
 		$conn_id = (int) $conn_id * 1;
