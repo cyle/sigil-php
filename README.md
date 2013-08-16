@@ -70,7 +70,7 @@ Technically you can send the `newNode()` method no arguments at all, but here th
 
     $result = $sigil->newNode(null, 4, 4, 4);
 
-The result will be `true` on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
+The result will be the new node ID on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
 
 To create a new connection, do this:
 
@@ -82,7 +82,7 @@ You must at least send the `newConnection()` method source and target nodes. The
 
 That will create a new connection between nodes 2 and 4.
 
-The result will be `true` on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
+The result will be the new connection ID on success and `false` on failure. See the **Errors** section below for more info on what to do if it returns `false`.
 
 ### Updating Nodes and Connections
 

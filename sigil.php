@@ -64,11 +64,13 @@ class SIGIL {
 		// parse headers of the response
 		$ch_header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$response_headers = mb_substr($raw_result, 0, $ch_header_size);
+		$response_headers_array = explode("\n", $response_headers);
 		$response_body = mb_substr($raw_result, $ch_header_size);
-		$response_first_line = mb_substr($response_headers, 0, strpos($response_headers, "\n"));
+		//$response_first_line = mb_substr($response_headers, 0, strpos($response_headers, "\n"));
+		$response_first_line = $response_headers_array[0];
 		preg_match('/http\/1\.1 (\d+) (.+)/i', $response_first_line, $http_status_matches);
 		$response_status_code = $http_status_matches[1] * 1;
-		if ($response_status_code != 200) {
+		if ($response_status_code != 200 && $response_status_code != 201) {
 			$this->last_error = 'Method returned: '.$response_status_code.' '.$http_status_matches[2];
 			curl_close($ch);
 			return false;
@@ -82,7 +84,29 @@ class SIGIL {
 		if (is_array($json_result)) {
 			return $json_result;
 		} else {
-			return $response_body; // otherwise send the text along
+			if ($type == 'POST' && ($path == '/node' || $path == '/node/')) {
+				// parse out the new node ID from Location: header
+				$new_id = 0;
+				foreach ($response_headers_array as $header) {
+					if (strpos($header, 'Location:') !== false) {
+						preg_match('/\/node\/(\d+)/i', $header, $id_matches);
+						$new_id = (int) $id_matches[1];
+					}
+				}
+				return $new_id;
+			} else if ($type == 'POST' && ($path == '/connection' || $path == '/connection/')) {
+				// parse out the new connection ID from Location: header
+				$new_id = 0;
+				foreach ($response_headers_array as $header) {
+					if (strpos($header, 'Location:') !== false) {
+						preg_match('/\/connection\/(\d+)/i', $header, $id_matches);
+						$new_id = (int) $id_matches[1];
+					}
+				}
+				return $new_id;
+			} else {
+				return $response_body; // otherwise send the text along
+			}
 		}
 	}
 	
@@ -206,7 +230,7 @@ class SIGIL {
 		if ($result == false) {
 			return false;
 		} else {
-			return true;
+			return $result;
 		}
 	}
 	
@@ -221,7 +245,7 @@ class SIGIL {
 		if ($result == false) {
 			return false;
 		} else {
-			return true;
+			return $result;
 		}
 	}
 	
