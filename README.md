@@ -142,6 +142,14 @@ That'll make sure the database is saved to disk. Next time the database restarts
 
 At the time of this writing, the SIGIL database does not save by itself in any fashion. You have to explicitly tell it to save the current graph.
 
+### Helper Methods
+
+If you want to check whether or not two nodes are already connected:
+
+    $result = $sigil->doesConnectionExist(11, 4);
+
+That will return `true` if a connection already exists between node IDs 11 and 4. It will return `false` otherwise.
+
 ### Errors
 
 If you call a method and provide incorrect or erroneous parameters, the call with throw an Exception with the relevant error message. Exceptions are thrown when the data you provide the sigil client is wrong in some way. If the data is alright and something is wrong on the database end, you will get `false` as a result.
