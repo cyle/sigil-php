@@ -120,6 +120,18 @@ To delete a specific connection:
 
 That will delete the connection with the unique ID 5.
 
+To delete all nodes (and, consequently, all connections):
+
+    $result = $sigil->deleteNodes();
+
+That will result in `true` on success, `false` on failure for some reason.
+
+To delete all connections:
+
+    $result = $sigil->deleteConnections();
+
+That will result in `true` on success, `false` on failure for some reason.
+
 ### Saving the Database to Disk
 
 By default, anything done in a SIGIL database is not persistent unless you tell the database to save itself to disk. You can do this with this client:

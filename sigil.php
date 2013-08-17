@@ -342,6 +342,26 @@ class SIGIL {
 		}
 	}
 	
+	// delete all nodes and connections
+	public function deleteNodes() {
+		$result = $this->rawCall('/nodes', 'DELETE');
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// delete all connections
+	public function deleteConnections() {
+		$result = $this->rawCall('/connections', 'DELETE');
+		if ($result == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 }
 
 
