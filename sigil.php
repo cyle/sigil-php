@@ -157,7 +157,7 @@ class SIGIL {
 			return $result;
 		}
 	}
-	
+		
 	// get connections attached to a node
 	public function nodeConnections($node_id) {
 		if (!is_numeric($node_id) || intval($node_id) < 1) {
@@ -362,6 +362,22 @@ class SIGIL {
 		}
 	}
 	
+	// does a connection exist between these two nodes
+	public function doesConnectionExist($source_id, $target_id) {
+		if (!is_numeric($source_id) || intval($source_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the source.');
+		}
+		if (!is_numeric($target_id) || intval($target_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the target.');
+		}
+		$conns = $this->connections();
+		foreach ($conns as $conn) {
+			if (($conn['Source'] == $source_id && $conn['Target'] == $target_id) || ($conn['Target'] == $source_id && $conn['Source'] == $target_id)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 
