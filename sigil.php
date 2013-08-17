@@ -218,6 +218,35 @@ class SIGIL {
 		}
 	}
 	
+	// get the closest node to the given node
+	public function closestTo($source_id) {
+		if (!is_numeric($source_id) || intval($source_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the source.');
+		}
+		$result = $this->rawCall('/node/closest/'.$source_id);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
+	// get all nodes within a given radius of a node
+	public function nearbyNodes($source_id, $radius) {
+		if (!is_numeric($source_id) || intval($source_id) < 1) {
+			throw new Exception('You must supply a unique node ID as the source.');
+		}
+		if (!is_numeric($radius) || $radius * 1 < 0) {
+			throw new Exception('You must supply a radius to search within.');
+		}
+		$result = $this->rawCall('/nodes/nearby/'.$source_id.'/radius/'.$radius);
+		if ($result == false) {
+			return false;
+		} else {
+			return $result;
+		}
+	}
+	
 	// make a new node
 	public function newNode($name = '', $x = 0, $y = 0, $z = 0, $extra = null) {
 		$new_node = array();

@@ -58,6 +58,14 @@ To get the Euclidean distance between two nodes:
 
     $distance_float = $sigil->distance(4, 12);
 
+To get the closest node to a given node, in this case the closest node to node ID 3:
+
+    $node = $sigil->closestTo(3);
+
+To get all nearby nodes within a certain radius of a given node, in this case all nodes within 10 units of node ID 4:
+
+    $nodes = $sigil->nearbyNodes(4, 10);
+
 What they return is dependent on what you asked for. I tried to name the above result-holding variables in a way that would hint at what you'll get back. If you get `false` as a result, that means there was an error. See the **Errors** section below.
 
 ### Creating Nodes and Connections
