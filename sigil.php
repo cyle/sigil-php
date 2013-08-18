@@ -254,7 +254,7 @@ class SIGIL {
 		$new_node['X'] = $x;
 		$new_node['Y'] = $y;
 		$new_node['Z'] = $z;
-		$new_node['ExtraJSON'] = $extra;
+		$new_node['Extra'] = $extra;
 		$result = $this->rawCall('/node', 'POST', $new_node);
 		if ($result == false) {
 			return false;
@@ -269,7 +269,7 @@ class SIGIL {
 		$new_conn['Name'] = $name;
 		$new_conn['Source'] = $source;
 		$new_conn['Target'] = $target;
-		$new_conn['ExtraJSON'] = $extra;
+		$new_conn['Extra'] = $extra;
 		$result = $this->rawCall('/connection', 'POST', $new_conn);
 		if ($result == false) {
 			return false;
