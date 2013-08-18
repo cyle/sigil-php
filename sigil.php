@@ -371,6 +371,7 @@ class SIGIL {
 			throw new Exception('You must supply a unique node ID as the target.');
 		}
 		$conns = $this->connections();
+		if (!is_array($conns) || count($conns) == 0) { return false; }
 		foreach ($conns as $conn) {
 			if (($conn['Source'] == $source_id && $conn['Target'] == $target_id) || ($conn['Target'] == $source_id && $conn['Source'] == $target_id)) {
 				return true;
